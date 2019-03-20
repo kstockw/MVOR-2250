@@ -3,7 +3,7 @@ Mid-Vision Object Recognition 2250 ms
 
 This repository is home to R scripts needed to analyze data from our Mid Vision Object Recognition task with a 2250ms delay. Scripts should be run in the following order:
 
-ReadSamplesSMI_2250.r
-MergeSMI_EMerge_2250.r
-MVOR-Scripts-fun.r
-MV2_DeviationAna2250.R
+1. ReadSamplesSMI_2250.r
+2. MergeSMI_EMerge_2250.r
+3. MVOR-Scripts-fun.r
+4. MV2_DeviationAna2250.R
