@@ -55,9 +55,7 @@ getwd()
 options(scipen=999)
 
 #Read in Full Samples csv created in ReadSampleSMI or MVOR_MakeMAster_Samples
-SamplesOriginal <- read.csv(file = "MVOR2_2250ms_FULL_Samples_Adults.csv", header=TRUE)
-# Remove random "x" and "UseSample" columns if they are present
-Samples <- SamplesOriginal[, -c(1, 9)]
+Samples <- read.csv(file = "MVOR2_2250ms_FULL_Samples_Adults.csv", header=TRUE)
 
 #unique(Samples$ExperimentName)
 unique(Samples$Trial)
@@ -169,6 +167,25 @@ write.csv(MV2_SMP, file = "MV2_SMP_Only.csv")
 ##  Use Eyetracking R function  ##
 
 ##################################
+
+###Creating a column that specifies whether the eye tracker lost the eye for a given sample
+MV2_SMP$SampleLost <- 999
+
+#Attempt at lapply use in this setup
+#MV2A_SMP$SampleLost <- lapply( MV2A_SMP, function (x) { (MV2A_SMP$L.Raw.X..px. == 0) & (MV2A_SMP$L.POR.X..px.==0)} )
+
+#REPLACE w. dplyr call
+for (i in 1:nrow(MV2_SMP)) {
+  #Target
+  if ((MV2_SMP[i, c("L.POR.X..px.")] == 0) & (MV2_SMP[i, c("L.POR.Y..px.")] == 0)) {
+    MV2_SMP[i, c("SampleLost")] <- 1
+  } else {
+    MV2_SMP[i, c("SampleLost")] <- 0
+  }
+  if ((i %% 1000) == 0) {
+    print(i)
+  }
+}
 
 #######Formula for marking 1 if the sample is in the AOI, and 0 if it is not.######
 # First, create file with ONLY experimental trials
