@@ -77,12 +77,14 @@ colnames(EPrime)
 #AgeList <- read.csv(file = "Age_List.csv", header = TRUE)
 #Samples <- merge(AgeList, Samples, by=c("Subject"), all=T)
 
-###Reduce the number of variables (STOPPED HERE 3/20/19)
-EPrime <- EPrime[, c("ExperimentName", "Subject", "Trial", "ArrayFile", "ComplementFile", "ComplementLocation",
+###Reduce the number of variables
+EPrime <- EPrime[, c("ExperimentName", "Subject", "Block", "ArrayFile", "ComplementFile", "ComplementLocation",
                       "Condition", "DiffExemplarFile", "DiffExemplarLocation", "DistractorFile", "DistractorLocation", "FvPMatch",
                       "ItemNumber", "ListNumber", "Q1File", "Q1Item", "Q2File", "Q2Item", "Q3File", "Q3Item", "Q4File", "Q4Item", 
                       "TargetFile", "TargetLocation", "TrialType")]
 
+#Renames Block column to Trial
+EPrime <- rename(EPrime, c("Block"="Trial"))
 
 #Remove practice trials
 EPrime <- EPrime[EPrime$Trial > 4, ]
@@ -103,7 +105,7 @@ nrow(MVOR2_MERG)
 # Sort MVOR2 (using 'arrange' from ddply)
 newData <- arrange(MVOR2_MERG, MVOR2_MERG$Subject, MVOR2_MERG$Trial, MVOR2_MERG$Time)
 MVOR2_MERG <- newData
-write.csv(MVOR2_MERG, file = "MVOR2_1400ms_Adults_Full_EPRIME-SMI.csv")
+write.csv(MVOR2_MERG, file = "MVOR2_2250ms_Adults_Full_EPRIME-SMI.csv")
 
 ###########################################
 
@@ -112,7 +114,7 @@ write.csv(MVOR2_MERG, file = "MVOR2_1400ms_Adults_Full_EPRIME-SMI.csv")
 
 ###########################################
 
-##Read in the file
+##Read in the file if needed
 
 
 unique(MVOR2_MERG$Subject)
@@ -148,13 +150,13 @@ newData2 <- MV2_FULL[
 MV2_FULL <- newData2
 
 #Invoke only if needed
-write.csv(MV2_FULL, file = "MV2_Full_MSGSTIM_Sorted.csv")
+#write.csv(MV2_FULL, file = "MV2_Full_MSGSTIM_Sorted.csv")
 
 unique (MV2_FULL$ExperimentName)
 unique (MV2_FULL$Subject)
 unique (MV2_FULL$TrialType)
 
-###remove messages from data set
+###remove messages from data set, only contains rows with meaningful samples
 MV2_SMP <- MV2_FULL[MV2_FULL$Type != 'MSG', ]
 unique (MV2_FULL$TrialType)
 unique (MV2_SMP$TrialType)
@@ -186,6 +188,7 @@ MV2_SMP_EXP$InQuad <- 0
 
 #  When doing a data check:
 #  DO NOT Check with all rows - change for a test to about 1000!  (Takes a long time)
+#Should be 999s at this point, means non-AOI look
 #  Future - convert to lapply
 for (i in 1:nrow(MV2_SMP_EXP)) { 
   x = MV2_SMP_EXP[i, c("L.POR.X..px.")]
@@ -233,7 +236,7 @@ for (i in 1:nrow(MV2_SMP_EXP)) {
 unique(MV2_SMP_EXP$InQuad)
 unique(MV2_SMP_EXP$TrialType)
 
-write.csv(MV2_SMP_EXP,file="MVOR2_1400ms_Adults_SMP_EXP.csv")
+write.csv(MV2_SMP_EXP,file="MVOR2_2250ms_Adults_SMP_EXP.csv")
 
 #MV2_SMP_EXP<-read.csv(file="MVOR2_Test.csv",header=TRUE)
 
@@ -253,19 +256,17 @@ MV2_SMP_EXP$SampleTime <- (MV2_SMP_EXP$Time - MV2_SMP_EXP$TimeOfFirstSample)
 MV2_SMP_EXP <- ddply(MV2_SMP_EXP, c("Subject", "Trial"), transform, TimeStamp=seq(1, (length(SampleTime)), by=1))
 
 ###Write file with timestamp number###
-##DO NOT REWRITE FILE!!!##
-write.csv(MV2_SMP_EXP, file = "MVOR2_1400ms_Adults_TSTAMP.csv")
+##DO NOT REWRITE FILE!!!, used in deviation analysis##
+write.csv(MV2_SMP_EXP, file = "MVOR2_2250ms_Adults_TSTAMP.csv")
 
-
-
-####we ran until here, 10/29/18, 5:40~####
 ###########################################
 ##
 ####        Filler Trials           #######
 ####  AOIS and Timestamp Columns    #######
 ##
 ###########################################
-MV2_SMP <- read.csv(file = "MVOR2_1400ms_Adults_TSTAMP.csv", header=TRUE)
+#Read in if needed
+#MV2_SMP <- read.csv(file = "MVOR2_2250ms_Adults_TSTAMP.csv", header=TRUE)
 
 ###remove messages from data set
 MV2_SMP <- MV2_FULL[MV2_FULL$Type != 'MSG', ]
@@ -347,8 +348,8 @@ MV2_SMP_FILLER <- ddply(MV2_SMP_FILLER, c("Subject", "Trial"), transform, TimeSt
 
 ###Write file with timestamp number###
 ##DO NOT REWRITE FILE!!!##
-write.csv(MV2_SMP_FILLER, file = "MV2_SMP_FILLER_TSTAMP_ADULTS.csv")
+write.csv(MV2_SMP_FILLER, file = "MV2_SMP_2250ms_FILLER_TSTAMP_ADULTS.csv")
 
-MV2A_SMP = rbind(MV2_SMP_EXP, MV2_SMP_FILLER)
+#MV2A_SMP = rbind(MV2_SMP_EXP, MV2_SMP_FILLER)
 
-#  Next File is MV2Adults_eyetrackingR_PGv2.r
+#next file is MV2_DeviationAna2250.r
