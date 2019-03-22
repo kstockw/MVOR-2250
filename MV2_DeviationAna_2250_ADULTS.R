@@ -256,9 +256,10 @@ nrow(FixProp)
 source("MVOR-Scripts-fun3_22_19.r") # PG-defined functions for script
 FixProp <- ddply(TB_Exp, c("Condition", "AOI", "Time"), summarise, MeanProp=mean(Prop), SEProp=sd(Prop)/sqrt(length(Prop)))
 FixProp_Parts <- FixProp[FixProp$Condition == 'Parts', ]
+rownames(FixProp_Parts) <- NULL
 
-###Reorder bars### CHECK NUMBERS
-FixProp_Parts <- FixProp_Parts[c(241:320, 1:80, 81:161, 162:240), ]
+###Reorder bars### 
+FixProp_Parts <- FixProp_Parts[c(241:320, 1:80, 81:160, 161:240), ]
 FixProp_Parts$AOI <- factor(FixProp_Parts$AOI, levels = c("Target", "Complement", "DiffExemplar", "Distractor"))
 myGGplot (FixProp_Parts, "Parts Prime")
 
@@ -269,9 +270,10 @@ myGGplot (FixProp_Parts, "Parts Prime")
 source("MVOR-Scripts-fun3_22_19.r") # PG-defined functions for script
 FixProp <- ddply(TB_Exp, c("Condition", "AOI", "Time"), summarise, MeanProp=mean(Prop), SEProp=sd(Prop)/sqrt(length(Prop)))
 FixProp_Feat <- FixProp[FixProp$Condition == 'Features', ]
+rownames(FixProp_Feat) <- NULL
 
 ###Reorder bars###
-FixProp_Feat <- FixProp_Feat[c(241:320, 1:80, 81:161, 162:240), ]
+FixProp_Feat <- FixProp_Feat[c(241:320, 1:80, 81:160, 161:240), ]
 FixProp_Feat$AOI <- factor(FixProp_Feat$AOI, levels = c("Target", "Complement", "DiffExemplar", "Distractor"))
 myGGplot(FixProp_Feat, "Feature Prime")
 
