@@ -5,5 +5,5 @@ This repository is home to R scripts needed to analyze data from our Mid Vision 
 
 1. ReadSamplesSMI_2250.r
 2. MergeSMI_EMerge_2250.r
-3. MVOR-Scripts-fun.r
-4. MV2_DeviationAna2250.R
+3. MVOR-Scripts-fun3_22_19.r
+4. MV2_DeviationAna_2250_ADULTS.R
