@@ -2,6 +2,7 @@
 #  PG - Oct, 2018
 #
 #  THIS VERSION is for MVOR 3 - 1400 msec ISI with BOTH target and comp in array
+# Currently being updatedd for 2250 msec ISI -KS
 
 library(reshape2)
 library(gtools) 
@@ -27,7 +28,7 @@ library(pbapply)
 library(ggsn)
 
 #source ("eyeRTrackLossCreateColumn.r")
-source("MVOR-Scripts-fun.r") # PG-defined functions for script
+source("MVOR-Scripts-fun3_22_19.r") # PG-defined functions for script
 
 #MV2A <- read.csv(file = "MV2A_EyetrackingR_Kids.csv", header=TRUE)
 #MV2A_SMP <- read.csv(file = "MV2_SMP_EXP_ONLY_1400_TSTAMP.csv", header=TRUE)
@@ -41,8 +42,8 @@ MV2_SMP_EXP <- read.csv(file = "MVOR2_2250ms_Adults_TSTAMP.csv", header = T)
 ##  Still need to run trackloss to exclude additional 49 trials above 50%
 ##  No other subject has more than 6 trials above 50%
 ##  This is for ADULTS in the 1400 msec ISI condition!
-InReadData <- subset(MV2A_SMP, Subject != 18299155)
-InReadData <- subset(InReadData, Subject != 18299150)
+#InReadData <- subset(MV2A_SMP, Subject != xxx)
+#InReadData <- subset(InReadData, Subject != xxx)
 
 ###Creating a column that specifies whether the eye tracker lost the eye for a given sample
 MV2_SMP_EXP$SampleLost <- 999
@@ -63,10 +64,10 @@ for (i in 1:nrow(MV2_SMP_EXP)) {
   }
 }
 
-write.csv(InReadData, file = "MV2A_Adults_2250wSampleLostColumn.csv")
-InReadData <- read.csv(file = "MV2A_Adults_2250wSampleLostColumn.csv", header=TRUE)
+write.csv(MV2_SMP_EXP, file = "MV2A_Adults_2250wSampleLostColumn.csv")
+MV2_SMP_EXP_SL <- read.csv(file = "MV2A_Adults_2250wSampleLostColumn.csv", header=TRUE)
 
-unique(InReadData$Subject)
+unique(MV2_SMP_EXP_SL$Subject)
 
 ####create file for eyetrackingR
 MV2A_ETR_ADULT <- make_eyetrackingr_data(MV2_SMP_EXP, 
@@ -80,7 +81,7 @@ MV2A_ETR_ADULT <- make_eyetrackingr_data(MV2_SMP_EXP,
 ###########################################################################################
 #######Look at track loss, and remove participants and trials with too much track loss#####
 ###########################################################################################
-#Create a file removing any time points after 1600ms 
+#Create a file removing any time points after 2000ms 
 MV2A_ETR_2000 <- subset_by_window(MV2A_ETR_ADULT,
                                   window_start_time = 0, 
                                   window_end_time = 2000, 
@@ -257,7 +258,7 @@ FixProp <- ddply(TB_Exp, c("Condition", "AOI", "Time"), summarise, MeanProp=mean
 FixProp_Parts <- FixProp[FixProp$Condition == 'Parts', ]
 
 ###Reorder bars### CHECK NUMBERS
-FixProp_Parts <- FixProp_Parts[c(240:320, 1:79, 80:159, 160:241), ]
+FixProp_Parts <- FixProp_Parts[c(241:320, 1:80, 81:161, 162:240), ]
 FixProp_Parts$AOI <- factor(FixProp_Parts$AOI, levels = c("Target", "Complement", "DiffExemplar", "Distractor"))
 myGGplot (FixProp_Parts, "Parts Prime")
 
@@ -270,7 +271,7 @@ FixProp <- ddply(TB_Exp, c("Condition", "AOI", "Time"), summarise, MeanProp=mean
 FixProp_Feat <- FixProp[FixProp$Condition == 'Features', ]
 
 ###Reorder bars###
-FixProp_Feat <- FixProp_Feat[c(240:320, 1:79, 80:159, 160:241), ]
+FixProp_Feat <- FixProp_Feat[c(241:320, 1:80, 81:161, 162:240), ]
 FixProp_Feat$AOI <- factor(FixProp_Feat$AOI, levels = c("Target", "Complement", "DiffExemplar", "Distractor"))
 myGGplot(FixProp_Feat, "Feature Prime")
 
